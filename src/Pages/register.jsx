@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const Navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -10,6 +11,8 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,16 +22,59 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validation de base
+    setError(null);
+    setSuccess(null);
+  
     if (formData.password !== formData.confirmPassword) {
       alert("Les mots de passe ne correspondent pas !");
       return;
     }
-    // Envoyer les données au backend
-    console.log("Formulaire envoyé : ", formData);
-    // Vous pouvez ajouter un appel API ici
+  
+    try {
+      const response = await fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+  
+      const textResponse = await response.text();
+      console.log("Réponse brute :", textResponse);
+  
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status} - ${textResponse}`);
+      }
+  
+      let data;
+      try {
+        data = JSON.parse(textResponse); 
+      } catch {
+        data = { message: textResponse };
+      }
+  
+      setSuccess(data.message || "Inscription réussie !");
+      console.log("Succès :", data);
+      navigate("/login"); 
+      
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (err) {
+      console.error("Erreur lors de l'inscription :", err);
+      setError(err.message);
+    }
   };
 
   return (
@@ -36,6 +82,8 @@ function Register() {
       <div className="card p-4 shadow-sm" style={{ width: "400px" }}>
         <h2 className="text-center mb-4">Créer un compte</h2>
         <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
           <div className="mb-3">
             <label htmlFor="firstName" className="form-label">
               Prénom
@@ -119,8 +167,10 @@ function Register() {
         </form>
         <div className="mt-3 text-center">
           <p>
-            Déjà un compte ? {" "}
-            <Link to="/login" className="text-primary">Connectez-vous</Link>
+            Déjà un compte ?{" "}
+            <Link to="/login" className="text-primary">
+              Connectez-vous
+            </Link>
           </p>
         </div>
       </div>

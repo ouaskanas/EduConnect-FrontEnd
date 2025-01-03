@@ -2,7 +2,6 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Login from "../Pages/login";
 
 
 function Header() {
@@ -22,9 +21,10 @@ function Header() {
           <button  className="btn btn-outline-secondary d-flex align-items-center" type="submit"> <FaSearch /></button>
         </form>
         <div>
-          <Link to="/login" className="btn btn-primary me-2">Login</Link>
-          {"  "}
-          <Link to="/register" className="btn btn-outline-primary">Register</Link>
+          <>
+              <Link to="/login" className="btn btn-outline-primary me-2">Connexion</Link>
+              <Link to="/register" className="btn btn-outline-secondary">Inscription</Link>
+          </>
         </div>
       </div>
     </nav>

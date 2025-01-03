@@ -1,7 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaBell, FaPen, FaChalkboardTeacher, FaCommentDots } from "react-icons/fa";
-
 function Sidebar({ user }) {
   return (
     <div
@@ -16,6 +15,9 @@ function Sidebar({ user }) {
       }}
     >
     <nav className="nav flex-column p-3">
+      <button type="button" className="btn btn-primary btn-lg btn-block" 
+      style={{ padding : 10 ,marginBottom : 20}}>
+        Nouveau Post</button>
         <a href="/notifications" className="nav-link text-dark mb-3">
           <FaBell className="me-2" />
           Notifications
