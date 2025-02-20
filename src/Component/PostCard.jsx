@@ -1,43 +1,39 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { FaHeart, FaComment, FaRetweet, FaEye } from "react-icons/fa";
+import React, { useState } from "react";
 
-function PostCard() {
+const PostCard = ({ post }) => {
+  const [upvotes, setUpvotes] = useState(0);
+  const [downvotes, setDownvotes] = useState(0);
+
+  const handleUpvote = () => {
+    setUpvotes(upvotes + 1);
+  };
+
+  const handleDownvote = () => {
+    setDownvotes(downvotes + 1);
+  };
+
   return (
-    <div className="card shadow-sm p-3 mb-3 bg-white rounded">
+    <div className="card mb-3 shadow-sm">
       <div className="card-body">
-        <div className="d-flex align-items-center mb-2">
-          <div
-            className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
-            style={{ width: "40px", height: "40px", fontSize: "18px", fontWeight: "bold" }}
-          >
-          </div>
-          <div>
-            <h6 className="mb-0">Nom Prénom</h6>
-            <small className="text-muted">@username · il y a X min</small>
-          </div>
-        </div>
-
-        <p className="card-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+        <p className="card-text text-muted">
+          Par <strong>{post.author.firstname} {post.author.lastname}</strong>
         </p>
-        <div className="d-flex justify-content-between text-muted">
-          <span className="d-flex align-items-center">
-            <FaComment className="me-1" /> 0
-          </span>
-          <span className="d-flex align-items-center">
-            <FaRetweet className="me-1" /> 0
-          </span>
-          <span className="d-flex align-items-center">
-            <FaHeart className="me-1" /> 0
-          </span>
-          <span className="d-flex align-items-center">
-            <FaEye className="me-1" /> 0
-          </span>
+        <h5 className="card-title">{post.title}</h5>
+        <p className="card-text">{post.content}</p>
+        <div className="d-flex justify-content-between align-items-center">
+          <button className="btn btn-outline-primary btn-sm" onClick={handleUpvote}>
+            👍 Upvote {upvotes}
+          </button>
+          <button className="btn btn-outline-danger btn-sm" onClick={handleDownvote}>
+            👎 Downvote {downvotes}
+          </button>
+          <small className="text-muted">
+            {post.comments.length} commentaires
+          </small>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default PostCard;
