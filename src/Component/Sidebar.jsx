@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaBell, FaPen, FaChalkboardTeacher, FaCommentDots } from "react-icons/fa";
 import { AuthContext } from "../Auth/AuthProvider";
+import CreatePostDialog from "./CreatePostDialog"; // Importation du dialogue
 
 function Sidebar() {
   const { isAuthenticated } = useContext(AuthContext);
   const [user, setUser] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // État du modal
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,20 +49,28 @@ function Sidebar() {
         width: "300px",
         height: "calc(100vh - 100px)",
         position: "fixed",
-        top: "110px",
+        top: "100px",
         left: 0,
         borderRadius: 30
       }}
     >
       <nav className="nav flex-column p-3">
-        <button type="button" className="btn btn-primary btn-lg btn-block" style={{ padding: 10, marginBottom: 20 }}>
+        {/* 🔥 Bouton qui ouvre le modal */}
+        <button 
+          type="button" 
+          className="btn btn-primary btn-lg btn-block" 
+          style={{ padding: 10, marginBottom: 20 }}
+          onClick={() => setIsDialogOpen(true)}
+        >
           Nouveau Post
         </button>
+
+        {/* Liens de navigation */}
         <a href="/notifications" className="nav-link text-dark mb-3">
           <FaBell className="me-2" />
           Notifications
         </a>
-        <a href="/posts" className="nav-link text-dark mb-3">
+        <a href="/mesposts" className="nav-link text-dark mb-3">
           <FaPen className="me-2" />
           Mes Posts
         </a>
@@ -73,6 +83,8 @@ function Sidebar() {
           Messages
         </a>
       </nav>
+
+      {/* Footer avec utilisateur */}
       <div className="mt-auto p-3 bg-secondary text-white text-center d-flex align-items-center justify-content-center">
         <div
           className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
@@ -86,10 +98,16 @@ function Sidebar() {
           {getInitials(user?.firstname, user?.lastname)}
         </div>
         <div>
-          {/* <p className="mb-0">Connecté en tant que :</p> */}
           <strong>{user ? `${user.firstname} ${user.lastname}` : "Guest"}</strong>
         </div>
       </div>
+
+      {/* 🔥 Modale de création de post */}
+      <CreatePostDialog 
+        isOpen={isDialogOpen} 
+        onClose={() => setIsDialogOpen(false)} 
+        onCreate={(newPost) => console.log("Post créé:", newPost)} 
+      />
     </div>
   );
 }
