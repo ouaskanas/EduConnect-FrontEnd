@@ -66,7 +66,7 @@ function Sidebar() {
         </button>
 
         {/* Liens de navigation */}
-        <a href="/notifications" className="nav-link text-dark mb-3">
+        <a href="/" className="nav-link text-dark mb-3">
           <FaBell className="me-2" />
           Notifications
         </a>
