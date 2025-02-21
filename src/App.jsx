@@ -5,6 +5,8 @@ import Homepage from './Pages/homepage'
 import Login from './Pages/login'
 import Register from './Pages/register'
 import UserPage from './Pages/UserPage'
+import ChatPage from './Pages/ChatPage'
+import Classroom from './Pages/Classroom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './Auth/AuthProvider'
 function App() {
@@ -18,6 +20,8 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/mesposts' element={<UserPage/>}/>
+      <Route path='/messages' element={<ChatPage/>}/>
+      <Route path='/classrooms' element={<Classroom/>}/>
       <Route path='/*' element={<Error/>}/>
     </Routes>
     </Router>
