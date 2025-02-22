@@ -1,42 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaEdit } from "react-icons/fa";
 import CreateCommentDialog from "./CreateCommentDialog";
+import EditPostDialog from "./EditPostDialog";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onUpdate }) => {
   const [upvotes, setUpvotes] = useState(0);
   const [downvotes, setDownvotes] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
     if (post && post.comments) {
       setComments(post.comments);
     }
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && parsedUser.role) {
+          setUserRole(parsedUser.role);
+        } else {
+          console.warn("Aucun rôle trouvé dans localStorage !");
+        }
+      } catch (error) {
+        console.error("Erreur lors du parsing de l'utilisateur :", error);
+      }
+    }
   }, [post]);
 
-  const handleUpvote = () => {
-    setUpvotes(upvotes + 1);
-  };
-
-  const handleDownvote = () => {
-    setDownvotes(downvotes + 1);
-  };
-
-  const toggleComments = () => {
-    setShowComments(!showComments);
-  };
-
-  const openCommentDialog = () => {
-    setIsCommentDialogOpen(true);
-  };
-
-  const closeCommentDialog = () => {
-    setIsCommentDialogOpen(false);
-  };
+  const handleUpvote = () => setUpvotes(upvotes + 1);
+  const handleDownvote = () => setDownvotes(downvotes + 1);
+  const toggleComments = () => setShowComments(!showComments);
+  const openCommentDialog = () => setIsCommentDialogOpen(true);
+  const closeCommentDialog = () => setIsCommentDialogOpen(false);
+  const openEditDialog = () => setIsEditDialogOpen(true);
+  const closeEditDialog = () => setIsEditDialogOpen(false);
 
   const handleNewComment = (newComment) => {
     setComments((prevComments) => [...prevComments, newComment]);
+  };
+
+  const handlePostUpdate = (updatedPost) => {
+    console.log("Post mis à jour :", updatedPost);
+    if (onUpdate) {
+      onUpdate(updatedPost);
+    }
+    closeEditDialog();
   };
 
   const authorFirstName = post.author ? post.author.firstname : "Inconnu";
@@ -60,7 +73,15 @@ const PostCard = ({ post }) => {
           <button className="btn btn-outline-info btn-sm" onClick={toggleComments}>
             <FaComment /> {comments.length} commentaires
           </button>
+          {userRole && userRole.trim().toUpperCase() === "TEACHER" || "ADMIN" ? (
+            <button className="btn btn-outline-secondary btn-sm" onClick={openEditDialog}>
+              <FaEdit /> Modifier
+            </button>
+          ) : (
+            <p className="text-muted">Vous ne pouvez pas modifier ce post</p>
+          )}
         </div>
+        
         {showComments && (
           <div className="mt-3">
             {comments.length > 0 ? (
@@ -81,11 +102,18 @@ const PostCard = ({ post }) => {
             </button>
           </div>
         )}
+        
         <CreateCommentDialog
           isOpen={isCommentDialogOpen}
           onClose={closeCommentDialog}
           postId={post.post_id}
-          onCreate={handleNewComment} 
+          onCreate={handleNewComment}
+        />
+        <EditPostDialog
+          isOpen={isEditDialogOpen}
+          onClose={closeEditDialog}
+          post={post}
+          onUpdate={handlePostUpdate}
         />
       </div>
     </div>

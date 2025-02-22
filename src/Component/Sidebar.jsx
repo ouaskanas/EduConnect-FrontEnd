@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaBell, FaPen, FaChalkboardTeacher, FaCommentDots } from "react-icons/fa";
+import { FaBell, FaPen, FaChalkboardTeacher, FaCommentDots, FaUsers, FaClipboardList } from "react-icons/fa";
 import { AuthContext } from "../Auth/AuthProvider";
-import CreatePostDialog from "./CreatePostDialog"; // Importation du dialogue
+import CreatePostDialog from "./CreatePostDialog";
 
 function Sidebar() {
   const { isAuthenticated } = useContext(AuthContext);
   const [user, setUser] = useState(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // État du modal
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -55,17 +55,16 @@ function Sidebar() {
       }}
     >
       <nav className="nav flex-column p-3">
-        {/* 🔥 Bouton qui ouvre le modal */}
-        <button 
-          type="button" 
-          className="btn btn-primary btn-lg btn-block" 
-          style={{ padding: 10, marginBottom: 20 }}
-          onClick={() => setIsDialogOpen(true)}
-        >
-          Nouveau Post
-        </button>
-
-        {/* Liens de navigation */}
+        {isAuthenticated && (
+          <button 
+            type="button" 
+            className="btn btn-primary btn-lg btn-block" 
+            style={{ padding: 10, marginBottom: 20 }}
+            onClick={() => setIsDialogOpen(true)}
+          >
+            Nouveau Post
+          </button>
+        )}
         <a href="/" className="nav-link text-dark mb-3">
           <FaBell className="me-2" />
           Notifications
@@ -82,9 +81,19 @@ function Sidebar() {
           <FaCommentDots className="me-2" />
           Messages
         </a>
+        {user?.role === "ADMIN" && (
+          <>
+            <a href="/Dashboard/users" className="nav-link text-dark mb-3">
+              <FaUsers className="me-2" />
+              Gestion Utilisateurs
+            </a>
+            <a href="/Dashboard/posts" className="nav-link text-dark mb-3">
+              <FaClipboardList className="me-2" />
+              Gestion Posts
+            </a>
+          </>
+        )}
       </nav>
-
-      {/* Footer avec utilisateur */}
       <div className="mt-auto p-3 bg-secondary text-white text-center d-flex align-items-center justify-content-center">
         <div
           className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
@@ -101,13 +110,13 @@ function Sidebar() {
           <strong>{user ? `${user.firstname} ${user.lastname}` : "Guest"}</strong>
         </div>
       </div>
-
-      {/* 🔥 Modale de création de post */}
-      <CreatePostDialog 
-        isOpen={isDialogOpen} 
-        onClose={() => setIsDialogOpen(false)} 
-        onCreate={(newPost) => console.log("Post créé:", newPost)} 
-      />
+      {isAuthenticated && (
+        <CreatePostDialog 
+          isOpen={isDialogOpen} 
+          onClose={() => setIsDialogOpen(false)} 
+          onCreate={(newPost) => console.log("Post créé:", newPost)} 
+        />
+      )}
     </div>
   );
 }

@@ -7,6 +7,8 @@ import Register from './Pages/register'
 import UserPage from './Pages/UserPage'
 import ChatPage from './Pages/ChatPage'
 import Classroom from './Pages/Classroom'
+import UsersDashboard from './Pages/UserDashboard'
+import DashboardPosts from './Pages/DashboardPosts'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './Auth/AuthProvider'
 function App() {
@@ -22,10 +24,13 @@ function App() {
       <Route path='/mesposts' element={<UserPage/>}/>
       <Route path='/messages' element={<ChatPage/>}/>
       <Route path='/classrooms' element={<Classroom/>}/>
+      <Route path='/Dashboard/users' element={<UsersDashboard/>}/>
+      <Route path='/Dashboard/posts' element={<DashboardPosts/>}/>
       <Route path='/*' element={<Error/>}/>
     </Routes>
     </Router>
     </AuthProvider>
+
     </>
   )
 }
