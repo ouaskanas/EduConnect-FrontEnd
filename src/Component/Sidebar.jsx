@@ -55,6 +55,7 @@ function Sidebar() {
       }}
     >
       <nav className="nav flex-column p-3">
+<<<<<<< HEAD
         {isAuthenticated && (
           <button 
             type="button" 
@@ -65,6 +66,19 @@ function Sidebar() {
             Nouveau Post
           </button>
         )}
+=======
+        {/* 🔥 Bouton qui ouvre le modal */}
+        <button 
+          type="button" 
+          className="btn btn-primary btn-lg btn-block" 
+          style={{ padding: 10, marginBottom: 20 }}
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Nouveau Post
+        </button>
+
+        {/* Liens de navigation */}
+>>>>>>> 7e82a4927e16251bb5702cd11cfd85dde94cc8a5
         <a href="/" className="nav-link text-dark mb-3">
           <FaBell className="me-2" />
           Notifications
